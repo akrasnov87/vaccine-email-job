@@ -14,7 +14,8 @@ namespace Vaccine.Models
         public string c_first_name { get; set; }
         public string c_last_name { get; set; }
         public string c_middle_name { get; set; }
-        public DateTime d_birthday { get; set; }
+        public DateTime? d_birthday { get; set; }
+
         /// <summary>
         /// Муниципалитет
         /// </summary>

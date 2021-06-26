@@ -9,7 +9,7 @@ using System.Net.Mail;
 namespace Vaccine
 {
     class Program
-    {
+    { 
         static void Main(string[] args)
         {
             Program prog = new Program();
@@ -47,7 +47,7 @@ namespace Vaccine
                             {
                                 Stream stream = provider.GetSteam();
 
-                                MailMessage mailMessage = mailer.GetMailMessage("Сводный отчет для Администратора", "Отчет за " + GetCurrentUserDate(), new ReportItem[] { new ReportItem() { stream = stream, name = "Сводный отчет" } }, emails, orgs[i].c_login);
+                                MailMessage mailMessage = mailer.GetMailMessage("Сводный отчет для Администратора", "Отчет за " + GetCurrentUserDate(), new ReportItem[] { new ReportItem() { stream = stream, name = "Сводный отчет.xlsx" } }, emails, orgs[i].c_login);
                                 mailer.SendMail(mailMessage);
                             }
                         }
@@ -67,13 +67,14 @@ namespace Vaccine
                             // Сводный отчет уровня «Ответственного»
                             string[][] items = new string[1][];
                             int[] stat = GetCount(users[i].id);
+                            items[0] = new string[2] { stat[0].ToString(), stat[1].ToString() };
 
                             var reports = new ReportItem[2];
 
                             using (UserReportProvider userReportProvider = new UserReportProvider(items))
                             {
                                 Stream userReportStream = userReportProvider.GetSteam();
-                                reports[0] = new ReportItem() { stream = userReportStream, name = "Сводный отчет" };
+                                reports[0] = new ReportItem() { stream = userReportStream, name = "Сводный отчет.xlsx" };
 
                                 // Отчет уровня «Ответственного»
                                 items = GetNames(users[i].id).ItemsToString();
@@ -81,7 +82,7 @@ namespace Vaccine
                                 using (NamesReportProvider namesReportProvider = new NamesReportProvider(items))
                                 {
                                     Stream namesStream = namesReportProvider.GetSteam();
-                                    reports[1] = new ReportItem() { stream = namesStream, name = "Отчет" };
+                                    reports[1] = new ReportItem() { stream = namesStream, name = "Отчет.xlsx" };
 
                                     MailMessage mailMessage = mailer.GetMailMessage("Отчет для Ответственного", "Отчет за " + GetCurrentUserDate(), reports, emails, users[i].c_login);
                                     mailer.SendMail(mailMessage);
@@ -127,12 +128,12 @@ namespace Vaccine
                 foreach(NameItem item in results)
                 {
                     var pdf = (from d in db.Documents
-                                join f in db.Files on d.id equals f.id
+                                join f in db.Files on d.id equals f.f_document
                                 where d.id == item.id && f.ba_pdf != null
                                 orderby f.dx_created descending
                                 select new {
                                     dx_created = f.dx_created
-                                }).SingleOrDefault();
+                                }).FirstOrDefault();
                     if (pdf != null)
                     {
                         item.vaccine = 1;
@@ -143,17 +144,17 @@ namespace Vaccine
                     }
 
                     var foto = (from d in db.Documents
-                               join f in db.Files on d.id equals f.id
+                               join f in db.Files on d.id equals f.f_document
                                where d.id == item.id && f.ba_jpg != null
                                orderby f.dx_created descending
                                select new
                                {
                                    dx_created = f.dx_created
-                               }).SingleOrDefault();
+                               }).FirstOrDefault();
                     if (foto != null)
                     {
                         item.pcr = 1;
-                        item.pcrDate = pdf.dx_created;
+                        item.pcrDate = foto.dx_created;
                     }
                     else
                     {

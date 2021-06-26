@@ -57,6 +57,8 @@ namespace Vaccine.ReportProvider
                 excel.SaveAs(memoryStream);
             }
 
+            memoryStream.Position = 0;
+
             return memoryStream;
         }
 

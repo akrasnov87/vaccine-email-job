@@ -8,7 +8,7 @@ namespace Vaccine.ReportProvider
     {
         public Guid id { get; set; }
         public string name { get; set; }
-        public DateTime birthDay { get; set; }
+        public DateTime? birthDay { get; set; }
         public int vaccine { get; set; }
         public DateTime? vaccineDate { get; set; }
         public int pcr { get; set; }
@@ -22,7 +22,7 @@ namespace Vaccine.ReportProvider
             string[][] array = new string[items.Length][];
             for(int i = 0; i < items.Length; i++)
             {
-                array[i] = new string[] { items[i].name, items[i].birthDay.ToString("dd.MM.yyyy"), items[i].vaccine.ToString(), GetDateString(items[i].vaccineDate), items[i].pcr.ToString(), GetDateString(items[i].pcrDate) };
+                array[i] = new string[] { items[i].name, GetDateString(items[i].birthDay), items[i].vaccine.ToString(), GetDateString(items[i].vaccineDate), items[i].pcr.ToString(), GetDateString(items[i].pcrDate) };
             }
 
             return array;

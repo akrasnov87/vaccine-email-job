@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Vaccine.Models
 {
-    [Table("dd_documents", Schema = "core")]
+    [Table("dd_files", Schema = "core")]
     public class File
     {
         [Key]
