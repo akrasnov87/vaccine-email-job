@@ -9,7 +9,8 @@ using System.Net.Mail;
 namespace Vaccine
 {
     class Program
-    { 
+    {
+        Stat[] stats;
         static void Main(string[] args)
         {
             Program prog = new Program();
@@ -25,6 +26,8 @@ namespace Vaccine
             Mailer mailer = new Mailer();
             using (ApplicationContext db = new ApplicationContext())
             {
+                stats = db.Stats.ToArray();
+
                 var users = GetAdmins();
                 if (users.Length > 0)
                 {
@@ -115,53 +118,21 @@ namespace Vaccine
         {
             using (ApplicationContext db = new ApplicationContext())
             {
-                var query = from d in db.Documents
-                            where d.f_user == f_user
+                var query = from s in stats
+                            join d in db.Documents on s.f_document equals d.id
+                            where s.f_user == f_user
                             select new NameItem()
                             {
                                 id = d.id,
                                 name = d.c_first_name + " " + d.c_last_name + " " + d.c_middle_name,
-                                birthDay = d.d_birthday
+                                birthDay = d.d_birthday,
+                                vaccine = s.n_pdf > 0 ? 1 : 0,
+                                vaccineDate = s.n_pdf > 0 ? s.dx_created : null,
+                                pcr = s.n_jpg > 0 ? 1 : 0,
+                                pcrDate = s.n_jpg > 0 ? s.dx_created : null
                             };
 
-                NameItem[] results = query.ToArray();
-                foreach(NameItem item in results)
-                {
-                    var pdf = (from d in db.Documents
-                                join f in db.Files on d.id equals f.f_document
-                                where d.id == item.id && f.ba_pdf != null
-                                orderby f.dx_created descending
-                                select new {
-                                    dx_created = f.dx_created
-                                }).FirstOrDefault();
-                    if (pdf != null)
-                    {
-                        item.vaccine = 1;
-                        item.vaccineDate = pdf.dx_created;
-                    } else
-                    {
-                        item.vaccine = 0;
-                    }
-
-                    var foto = (from d in db.Documents
-                               join f in db.Files on d.id equals f.f_document
-                               where d.id == item.id && f.ba_jpg != null
-                               orderby f.dx_created descending
-                               select new
-                               {
-                                   dx_created = f.dx_created
-                               }).FirstOrDefault();
-                    if (foto != null)
-                    {
-                        item.pcr = 1;
-                        item.pcrDate = foto.dx_created;
-                    }
-                    else
-                    {
-                        item.pcr = 0;
-                    }
-                }
-                return results;
+                return query.ToArray();
             }
         }
 

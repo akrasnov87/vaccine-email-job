@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Vaccine.Models;
-using Vaccine.Models.f;
 
 namespace Vaccine
 {
@@ -14,13 +13,12 @@ namespace Vaccine
             Database.EnsureCreated();
         }
 
+        public DbSet<Stat> Stats { get; set; }
         public DbSet<Document> Documents { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<UserInRoles> UserInRoles { get; set; }
         public DbSet<File> Files { get; set; }
-
-        public DbSet<Org> Orgs { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
