@@ -41,6 +41,8 @@ namespace Vaccine.ReportProvider
 
                 string headerRange = "A1:" + GetColumnName(headers.Length) + "1";
                 excelWorksheet.Cells[headerRange].LoadFromArrays(new string[][] { headers.ToArray() });
+                excelWorksheet.Cells[headerRange].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+                excelWorksheet.Cells[headerRange].Style.Font.Bold = true;
 
                 int range = 2;
 
@@ -50,6 +52,7 @@ namespace Vaccine.ReportProvider
 
                     headerRange = "A" + range + ":" + GetColumnName(headers.Length) + range;
                     excelWorksheet.Cells[headerRange].LoadFromArrays(new string[][] { columns });
+                    FormatCells(excelWorksheet.Cells, range, headers.Length);
 
                     range++;
                 }
@@ -60,6 +63,11 @@ namespace Vaccine.ReportProvider
             memoryStream.Position = 0;
 
             return memoryStream;
+        }
+
+        protected virtual void FormatCells(ExcelRange excelRange, int rangeIdx, int length)
+        {
+
         }
 
         protected string GetColumnName(int index)

@@ -17,5 +17,6 @@ namespace Vaccine.Models
         public long n_jpg { get; set; }
         public long n_pdf { get; set; }
         public DateTime dx_created { get; set; }
+        public bool b_ignore { get; set; }
     }
 }

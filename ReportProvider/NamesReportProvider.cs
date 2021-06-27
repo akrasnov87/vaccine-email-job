@@ -21,7 +21,19 @@ namespace Vaccine.ReportProvider
 
         public override string[] GetHeaders()
         {
-            return new string[] { "ФИО", "Дата рождения", "Вакцинирован", "Дата сохранения информации о вакцинации", "ПЦР", "Дата внесения информации о ПЦР" };
+            return new string[] { "ФИО", "Дата рождения", "Вакцинирован\n(1-Да, 0-Нет)", "Кол-во вакцинаций", "Дата внесения\nинформации\nо вакцинации", "ПЦР\n(1-Да, 0-Нет)", "Кол-во ПЦР", "Дата внесения\nинформации\nо ПЦР", "Противопоказание\n(1-Да, 0-Нет)" };
+        }
+
+        protected override void FormatCells(ExcelRange excelRange, int rangeIdx, int length)
+        {
+            base.FormatCells(excelRange, rangeIdx, length);
+
+            excelRange["B" + rangeIdx].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Right;
+            excelRange["C" + rangeIdx + ":D" + rangeIdx].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+            excelRange["E" + rangeIdx].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Right;
+            excelRange["F" + rangeIdx + ":G" + rangeIdx].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+            excelRange["H" + rangeIdx].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Right;
+            excelRange["I" + rangeIdx].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
         }
     }
 }

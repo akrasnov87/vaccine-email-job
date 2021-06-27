@@ -36,5 +36,7 @@ namespace Vaccine.Models
         /// Признак удаления
         /// </summary>
         public bool sn_delete { get; set; }
+
+        public string c_description { get; set; }
     }
 }

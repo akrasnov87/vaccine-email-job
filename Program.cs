@@ -36,8 +36,8 @@ namespace Vaccine
                     string[][] items = new string[orgs.Length][];
                     for (int i = 0; i < orgs.Length; i++)
                     {
-                        int[] stat = GetCount(orgs[i].id);
-                        items[i] = new string[] { orgs[i].c_first_name, stat[0].ToString(), stat[1].ToString() };
+                        int[] stat = GetCount(orgs[i].id, false);
+                        items[i] = new string[] { orgs[i].c_first_name, stat[0].ToString(), stat[1].ToString(), stat[2].ToString() };
                     }
 
                     for (int i = 0; i < users.Length; i++)
@@ -69,8 +69,8 @@ namespace Vaccine
                             
                             // Сводный отчет уровня «Ответственного»
                             string[][] items = new string[1][];
-                            int[] stat = GetCount(users[i].id);
-                            items[0] = new string[2] { stat[0].ToString(), stat[1].ToString() };
+                            int[] stat = GetCount(users[i].id, false);
+                            items[0] = new string[3] { stat[0].ToString(), stat[1].ToString(), stat[2].ToString() };
 
                             var reports = new ReportItem[2];
 
@@ -97,14 +97,23 @@ namespace Vaccine
             }
         }
 
-        int[] GetCount(int f_user)
+        int[] GetCount(int f_user, bool isNeedPcr = true)
         {
-            int[] results = new int[2];
+            int[] results = new int[3];
 
-            var names = GetNames(f_user);
+            var names = GetNames(f_user, isNeedPcr);
 
-            results[0] = names.Sum(t => t.vaccine);
-            results[1] = names.Sum(t => t.pcr);
+            results[0] = names.Where(t => !t.b_ignore).Sum(t => t.vaccine);
+            if (isNeedPcr)
+            {
+                results[1] = names.Where(t => !t.b_ignore).Sum(t => t.pcr);
+            }
+            else
+            {
+                results[1] = names.Where(t => !t.b_ignore && t.vaccine == 0).Sum(t => t.pcr);
+            }
+
+            results[2] = names.Where(t => t.b_ignore).Count();
 
             return results;
         }
@@ -113,23 +122,28 @@ namespace Vaccine
         /// Дополнительная информация для Отчет уровня «Ответственного»
         /// </summary>
         /// <param name="f_user"></param>
+        /// <param name="isNeedPcr">Нужна статистика по ПЦР</param>
         /// <returns></returns>
-        NameItem[] GetNames(int f_user)
+        NameItem[] GetNames(int f_user, bool isNeedPcr = true)
         {
             using (ApplicationContext db = new ApplicationContext())
             {
                 var query = from s in stats
                             join d in db.Documents on s.f_document equals d.id
                             where s.f_user == f_user
+                            orderby d.c_first_name, d.c_last_name, d.c_middle_name
                             select new NameItem()
                             {
                                 id = d.id,
                                 name = d.c_first_name + " " + d.c_last_name + " " + d.c_middle_name,
                                 birthDay = d.d_birthday,
                                 vaccine = s.n_pdf > 0 ? 1 : 0,
+                                vaccineCount = s.n_pdf,
                                 vaccineDate = s.n_pdf > 0 ? s.dx_created : null,
                                 pcr = s.n_jpg > 0 ? 1 : 0,
-                                pcrDate = s.n_jpg > 0 ? s.dx_created : null
+                                pcrCount = s.n_jpg,
+                                pcrDate = s.n_jpg > 0 ? s.dx_created : null,
+                                b_ignore = s.b_ignore
                             };
 
                 return query.ToArray();
@@ -175,6 +189,7 @@ namespace Vaccine
                             join r in db.Roles on uir.f_role equals r.id
                             join u in db.Users on uir.f_user equals u.id
                             where r.c_name == "user" && !u.b_disabled && !u.sn_delete && !uir.sn_delete
+                            orderby u.c_description, u.c_first_name
                             select u;
 
                 return users.ToArray();

@@ -21,7 +21,16 @@ namespace Vaccine.ReportProvider
 
         public override string[] GetHeaders()
         {
-            return new string[] { "Количество вакцинированных", "Количество ПЦР" };
+            return new string[] { "Количество\nвакцинированных", "Количество\nсдающих ПЦР", "Количество\nпротивопоказаний" };
+        }
+
+        protected override void FormatCells(ExcelRange excelRange, int rangeIdx, int length)
+        {
+            base.FormatCells(excelRange, rangeIdx, length);
+
+            string headerRange = "A" + rangeIdx + ":" + GetColumnName(length) + rangeIdx;
+
+            excelRange[headerRange].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
         }
     }
 }

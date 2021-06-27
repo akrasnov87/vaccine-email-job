@@ -22,5 +22,6 @@ namespace Vaccine.Models
         public int f_user { get; set; }
         public bool sn_delete { get; set; }
         public DateTime dx_created { get; set; }
+        public bool b_ignore { get; set; }
     }
 }
