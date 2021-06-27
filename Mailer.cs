@@ -87,12 +87,18 @@ namespace Vaccine
 
         public void SendMail(MailMessage mail)
         {
-            SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587);
-            // логин и пароль
-            smtp.UseDefaultCredentials = false;
-            smtp.Credentials = new NetworkCredential("mysmtp1987@gmail.com", "Bussine$Perfect");
-            smtp.EnableSsl = true;
-            smtp.Send(mail);
+            try
+            {
+                SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587);
+                // логин и пароль
+                smtp.UseDefaultCredentials = false;
+                smtp.Credentials = new NetworkCredential("mysmtp1987@gmail.com", "Bussine$Perfect");
+                smtp.EnableSsl = true;
+                smtp.Send(mail);
+            } catch(Exception e)
+            {
+                Log("[ERR:]" + e.ToString());
+            }
         }
 
         private string GetCurrentDate()
