@@ -21,7 +21,7 @@ namespace Vaccine.ReportProvider
 
         public override string[] GetHeaders()
         {
-            return new string[] { "Количество\nвакцинированных", "Количество\nсдающих ПЦР", "Количество\nПЦР старше 3-х дней", "Количество\nПЦР старше 7-х дней", "Количество\nпротивопоказаний" };
+            return new string[] { "Кол-во вакцинированных", "Кол-во-сдающих ПЦР", "Кол-во-ПЦР старше 3-х дней", "Кол-во ПЦР старше 7-х дней", "Кол-во-противопоказаний" };
         }
 
         protected override void FormatCells(ExcelRange excelRange, int rangeIdx, int length, string[] columns)

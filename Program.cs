@@ -37,7 +37,7 @@ namespace Vaccine
                     for (int i = 0; i < orgs.Length; i++)
                     {
                         int[] stat = GetCount(orgs[i].id, false);
-                        items[i] = new string[] { orgs[i].c_first_name, stat[0].ToString(), stat[1].ToString(), stat[2].ToString(), stat[3].ToString(), stat[4].ToString() };
+                        items[i] = new string[] { orgs[i].c_first_name, orgs[i].c_description, stat[0].ToString(), stat[1].ToString(), stat[2].ToString(), stat[3].ToString(), stat[4].ToString() };
                     }
 
                     for (int i = 0; i < users.Length; i++)
