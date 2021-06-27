@@ -52,7 +52,7 @@ namespace Vaccine.ReportProvider
 
                     headerRange = "A" + range + ":" + GetColumnName(headers.Length) + range;
                     excelWorksheet.Cells[headerRange].LoadFromArrays(new string[][] { columns });
-                    FormatCells(excelWorksheet.Cells, range, headers.Length);
+                    FormatCells(excelWorksheet.Cells, range, headers.Length, columns);
 
                     range++;
                 }
@@ -65,7 +65,7 @@ namespace Vaccine.ReportProvider
             return memoryStream;
         }
 
-        protected virtual void FormatCells(ExcelRange excelRange, int rangeIdx, int length)
+        protected virtual void FormatCells(ExcelRange excelRange, int rangeIdx, int length, string[] columns)
         {
 
         }

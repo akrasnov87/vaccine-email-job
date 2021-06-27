@@ -37,7 +37,7 @@ namespace Vaccine
                     for (int i = 0; i < orgs.Length; i++)
                     {
                         int[] stat = GetCount(orgs[i].id, false);
-                        items[i] = new string[] { orgs[i].c_first_name, stat[0].ToString(), stat[1].ToString(), stat[2].ToString() };
+                        items[i] = new string[] { orgs[i].c_first_name, stat[0].ToString(), stat[1].ToString(), stat[2].ToString(), stat[3].ToString(), stat[4].ToString() };
                     }
 
                     for (int i = 0; i < users.Length; i++)
@@ -70,7 +70,7 @@ namespace Vaccine
                             // Сводный отчет уровня «Ответственного»
                             string[][] items = new string[1][];
                             int[] stat = GetCount(users[i].id, false);
-                            items[0] = new string[3] { stat[0].ToString(), stat[1].ToString(), stat[2].ToString() };
+                            items[0] = new string[5] { stat[0].ToString(), stat[1].ToString(), stat[2].ToString(), stat[3].ToString(), stat[4].ToString() };
 
                             var reports = new ReportItem[2];
 
@@ -99,7 +99,7 @@ namespace Vaccine
 
         int[] GetCount(int f_user, bool isNeedPcr = true)
         {
-            int[] results = new int[3];
+            int[] results = new int[5];
 
             var names = GetNames(f_user);
 
@@ -113,7 +113,10 @@ namespace Vaccine
                 results[1] = names.Where(t => !t.b_ignore && t.vaccine == 0 && t.pcr >= 0).Count();
             }
 
-            results[2] = names.Where(t => t.b_ignore).Count();
+            results[2] = names.Where(t => !t.b_ignore && t.vaccine == 0 && t.pcr >= 0 && t.n_day >= 3 && t.n_day < 7).Count();
+            results[3] = names.Where(t => !t.b_ignore && t.vaccine == 0 && t.pcr >= 0 && t.n_day >= 7).Count();
+
+            results[4] = names.Where(t => t.b_ignore).Count();
 
             return results;
         }
@@ -142,7 +145,8 @@ namespace Vaccine
                                 pcr = s.n_jpg > 0 ? 1 : 0,
                                 pcrCount = s.n_jpg,
                                 pcrDate = s.n_jpg > 0 ? s.dx_created : null,
-                                b_ignore = s.b_ignore
+                                b_ignore = s.b_ignore,
+                                n_day = s.n_day.HasValue ? s.n_day.Value : 0
                             };
 
                 return query.ToArray();

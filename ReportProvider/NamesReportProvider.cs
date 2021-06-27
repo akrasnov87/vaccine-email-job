@@ -24,10 +24,33 @@ namespace Vaccine.ReportProvider
             return new string[] { "ФИО", "Дата рождения", "Вакцинирован\n(1-Да, 0-Нет)", "Кол-во вакцинаций", "Дата внесения\nинформации\nо вакцинации", "ПЦР\n(1-Да, 0-Нет)", "Кол-во ПЦР", "Дата внесения\nинформации\nо ПЦР", "Противопоказание\n(1-Да, 0-Нет)" };
         }
 
-        protected override void FormatCells(ExcelRange excelRange, int rangeIdx, int length)
+        protected override void FormatCells(ExcelRange excelRange, int rangeIdx, int length, string[] columns)
         {
-            base.FormatCells(excelRange, rangeIdx, length);
+            base.FormatCells(excelRange, rangeIdx, length, columns);
 
+            string dateStr = columns[columns.Length - 2];
+            if (!string.IsNullOrEmpty(dateStr))
+            {
+                try
+                {
+                    DateTime dt = DateTime.Parse(dateStr, System.Globalization.CultureInfo.GetCultureInfo("ru-RU"));
+                    string headerRange = "A"+ rangeIdx + ":" + GetColumnName(columns.Length) + rangeIdx;
+
+                    int day = (DateTime.Now.Date - dt).Days;
+
+                    if (day >= 3 && day < 7)
+                    {
+                        excelRange[headerRange].Style.Fill.SetBackground(System.Drawing.Color.Yellow);
+                    } else if(day >= 7)
+                    {
+                        excelRange[headerRange].Style.Fill.SetBackground(System.Drawing.Color.Red);
+                    }
+                } catch(Exception e)
+                {
+                    Console.WriteLine("[ERR]: " + e.ToString());
+                }
+            }
+ 
             excelRange["B" + rangeIdx].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Right;
             excelRange["C" + rangeIdx + ":D" + rangeIdx].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
             excelRange["E" + rangeIdx].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Right;

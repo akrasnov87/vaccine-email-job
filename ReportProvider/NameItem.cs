@@ -16,6 +16,7 @@ namespace Vaccine.ReportProvider
         public long pcrCount { get; set; }
         public DateTime? pcrDate { get; set; }
         public bool b_ignore { get; set; }
+        public int n_day { get; set; }
     }
 
     public static class NameItemExtension

@@ -21,12 +21,12 @@ namespace Vaccine.ReportProvider
 
         public override string[] GetHeaders()
         {
-            return new string[] { "Количество\nвакцинированных", "Количество\nсдающих ПЦР", "Количество\nпротивопоказаний" };
+            return new string[] { "Количество\nвакцинированных", "Количество\nсдающих ПЦР", "Количество\nПЦР старше 3-х дней", "Количество\nПЦР старше 7-х дней", "Количество\nпротивопоказаний" };
         }
 
-        protected override void FormatCells(ExcelRange excelRange, int rangeIdx, int length)
+        protected override void FormatCells(ExcelRange excelRange, int rangeIdx, int length, string[] columns)
         {
-            base.FormatCells(excelRange, rangeIdx, length);
+            base.FormatCells(excelRange, rangeIdx, length, columns);
 
             string headerRange = "A" + rangeIdx + ":" + GetColumnName(length) + rangeIdx;
 
