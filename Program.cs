@@ -101,7 +101,7 @@ namespace Vaccine
         {
             int[] results = new int[3];
 
-            var names = GetNames(f_user, isNeedPcr);
+            var names = GetNames(f_user);
 
             results[0] = names.Where(t => !t.b_ignore).Sum(t => t.vaccine);
             if (isNeedPcr)
@@ -110,7 +110,7 @@ namespace Vaccine
             }
             else
             {
-                results[1] = names.Where(t => !t.b_ignore && t.vaccine == 0).Sum(t => t.pcr);
+                results[1] = names.Where(t => !t.b_ignore && t.vaccine == 0 && t.pcr >= 0).Count();
             }
 
             results[2] = names.Where(t => t.b_ignore).Count();
@@ -122,9 +122,8 @@ namespace Vaccine
         /// Дополнительная информация для Отчет уровня «Ответственного»
         /// </summary>
         /// <param name="f_user"></param>
-        /// <param name="isNeedPcr">Нужна статистика по ПЦР</param>
         /// <returns></returns>
-        NameItem[] GetNames(int f_user, bool isNeedPcr = true)
+        NameItem[] GetNames(int f_user)
         {
             using (ApplicationContext db = new ApplicationContext())
             {

@@ -27,12 +27,12 @@ namespace Vaccine.ReportProvider
             {
                 array[i] = new string[] { items[i].name, GetDateString(
                     items[i].birthDay),
-                    items[i].vaccine.ToString(),
-                    items[i].vaccineCount.ToString(),
-                    GetDateString(items[i].vaccineDate),
-                    items[i].pcr.ToString(),
-                    items[i].pcrCount.ToString(),
-                    GetDateString(items[i].pcrDate),
+                    items[i].b_ignore ? "" : items[i].vaccine.ToString(),
+                    items[i].b_ignore ? "" : items[i].vaccineCount.ToString(),
+                    items[i].b_ignore ? "" : GetDateString(items[i].vaccineDate),
+                    items[i].b_ignore ? "" : items[i].pcr.ToString(),
+                    items[i].b_ignore ? "" : items[i].pcrCount.ToString(),
+                    items[i].b_ignore ? "" : GetDateString(items[i].pcrDate),
                     items[i].b_ignore ? "1" : "0" };
             }
 
