@@ -13,16 +13,13 @@ namespace Vaccine
             Database.EnsureCreated();
         }
 
-        public DbSet<Stat> Stats { get; set; }
-        public DbSet<Document> Documents { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<UserInRoles> UserInRoles { get; set; }
-        public DbSet<File> Files { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseNpgsql("Host=34.122.9.109;Port=5432;Database=vaccine-release-db;Username=mobnius;Password=XfOgQt");
+            optionsBuilder.UseNpgsql("Host=webdb;Port=5432;Database=vaccine-release-db;Username=vaccine-sert-verify;Password=J2Jbo6");
         }
     }
 }

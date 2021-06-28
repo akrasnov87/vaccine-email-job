@@ -41,7 +41,7 @@ namespace Vaccine
         /// <param name="emails">Список адресов для рассылки</param>
         /// <param name="login">Логин пользователя</param>
         /// <returns></returns>
-        public MailMessage GetMailMessage(string title, string message, ReportItem[] reports, string[] emails, string login)
+        public MailMessage GetMailMessage(string title, string message, List<PentahoUrlBuilder> reports, string[] emails, string login)
         {
             MailAddress from = new MailAddress("mysmtp1987@gmail.com", "АРМ \"Вакцинация\"");
 
@@ -52,9 +52,9 @@ namespace Vaccine
                     MailAddress to = new MailAddress(emails[0]);
                     MailMessage mail = new MailMessage(from, to);
 
-                    foreach (ReportItem item in reports)
+                    foreach (PentahoUrlBuilder item in reports)
                     {
-                        mail.Attachments.Add(new Attachment(item.stream, item.name));
+                        mail.Attachments.Add(new Attachment(GetStreamFromUrl(item.Url), item.Description + item.Extension));
                     }
 
                     mail.Subject = title;
@@ -83,6 +83,19 @@ namespace Vaccine
             }
 
             return null;
+        }
+
+        public Stream GetStreamFromUrl(string url)
+        {
+            byte[] imageData = null;
+
+            using (var wc = new System.Net.WebClient())
+                imageData = wc.DownloadData(url);
+
+            string value = Guid.NewGuid().ToString();
+            File.WriteAllBytes("temp/" + value, imageData);
+
+            return new MemoryStream(imageData);
         }
 
         public void SendMail(MailMessage mail)
