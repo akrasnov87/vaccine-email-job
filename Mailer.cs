@@ -22,7 +22,7 @@ namespace Vaccine
             Directory.CreateDirectory(dir);
         }
 
-        private void Log(string txt)
+        public void Log(string txt)
         {
             Console.WriteLine(txt);
             string fileName = "log-" + DateTime.Now.ToString("yyyy-MM-dd") + ".log";
@@ -117,6 +117,26 @@ namespace Vaccine
         private string GetCurrentDate()
         {
             return DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss");
+        }
+
+        public void SendReportMail()
+        {
+            MailAddress from = new MailAddress("mysmtp1987@gmail.com", "АРМ \"Вакцинация\"");
+            MailAddress to = new MailAddress("akrasnov87@gmail.com");
+            MailMessage mail = new MailMessage(from, to);
+
+            mail.Subject = "Отчет по отправке писем от системы Вакцинация";
+
+            string fileName = "log-" + DateTime.Now.ToString("yyyy-MM-dd") + ".log";
+            if (File.Exists("temp/" + fileName))
+            {
+                mail.Body = File.ReadAllText("temp/" + fileName);
+            }
+
+            // письмо представляет код html
+            mail.IsBodyHtml = false;
+
+            SendMail(mail);
         }
     }
 }

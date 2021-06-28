@@ -23,6 +23,7 @@ namespace Vaccine
         public void Run()
         {
             Mailer mailer = new Mailer();
+            mailer.Log("processing: " + DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss"));
             using (ApplicationContext db = new ApplicationContext())
             {
                 var users = GetAdmins();
@@ -66,6 +67,9 @@ namespace Vaccine
                     }
                 }
             }
+            mailer.Log("finished " + DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss"));
+
+            mailer.SendReportMail();
         }
 
         /// <summary>
