@@ -37,6 +37,7 @@ namespace Vaccine
 
                             List<PentahoUrlBuilder> reports = new List<PentahoUrlBuilder>();
                             reports.Add(new PentahoUrlBuilder("total-orgs", "Сводный отчет", "f_user=" + -1));
+                            reports.Add(new PentahoUrlBuilder("verify", "Сводный отчет о достоверности сертификата", "f_user=" + -1));
 
                             MailMessage mailMessage = mailer.GetMailMessage("Сводный отчет для Администратора", "Отчет за " + GetCurrentUserDate(), reports, emails, users[i].c_login);
                             mailer.SendMail(mailMessage);
@@ -57,6 +58,7 @@ namespace Vaccine
                             List<PentahoUrlBuilder> reports = new List<PentahoUrlBuilder>();
                             reports.Add(new PentahoUrlBuilder("total-orgs", "Сводный отчет", "f_user=" + users[i].id));
                             reports.Add(new PentahoUrlBuilder("users", "Отчет", "f_user=" + users[i].id));
+                            reports.Add(new PentahoUrlBuilder("verify", "Отчет о достоверности сертификата", "f_user=" + users[i].id));
 
                             MailMessage mailMessage = mailer.GetMailMessage("Сводный отчет для Ответственного", "Отчет за " + GetCurrentUserDate(), reports, emails, users[i].c_login);
                             mailer.SendMail(mailMessage);
