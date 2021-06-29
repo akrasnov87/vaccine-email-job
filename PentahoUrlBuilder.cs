@@ -8,7 +8,7 @@ namespace Vaccine
 {
     public class PentahoUrlBuilder
     {
-        public static string ROOT_PATH = "http://gcp-pentaho.appcode.pw/pentaho/api/repos/%3Ahome%3Avac%3A";
+        public static string ROOT_PATH = "https://gcp-pentaho.appcode.pw/pentaho/api/repos/%3Ahome%3Avac%3A";
 
         private string Format { get; set; }
 

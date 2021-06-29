@@ -2,8 +2,6 @@
 using System.Linq;
 using System.Collections.Generic;
 using Vaccine.Models;
-using Vaccine.ReportProvider;
-using System.IO;
 using System.Net.Mail;
 
 namespace Vaccine
@@ -37,8 +35,8 @@ namespace Vaccine
                             string[] emails = users[i].c_email.Trim().Replace(",", ";").Replace(" ", ";").Split(';');
 
                             List<PentahoUrlBuilder> reports = new List<PentahoUrlBuilder>();
-                            reports.Add(new PentahoUrlBuilder("total-orgs", "Сводный отчет", "f_user=" + -1));
-                            reports.Add(new PentahoUrlBuilder("verify", "Сводный отчет о достоверности сертификата", "f_user=" + -1));
+                            reports.Add(new PentahoUrlBuilder("total-orgs", "Сводный отчет", "f_user=" + users[i]));
+                            reports.Add(new PentahoUrlBuilder("verify", "Сводный отчет о достоверности сертификата", "f_user=" + users[i]));
 
                             MailMessage mailMessage = mailer.GetMailMessage("Сводный отчет для Администратора", "Отчет за " + GetCurrentUserDate(), reports, emails, users[i].c_login);
                             mailer.SendMail(mailMessage);
