@@ -8,11 +8,16 @@ namespace Vaccine
 {
     class Program
     {
+        private Mailer mailer;
         static void Main(string[] args)
         {
             Program prog = new Program();
             prog.Run();
-            
+
+            if (args.Length > 0 && args[0] == "true")
+            {
+                prog.SendReportMail();
+            }
         }
 
         /// <summary>
@@ -20,7 +25,7 @@ namespace Vaccine
         /// </summary>
         public void Run()
         {
-            Mailer mailer = new Mailer();
+            mailer = new Mailer();
             mailer.Log("processing: " + DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss"));
             using (ApplicationContext db = new ApplicationContext())
             {
@@ -69,7 +74,10 @@ namespace Vaccine
                 }
             }
             mailer.Log("finished " + DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss"));
+        }
 
+        public void SendReportMail()
+        {
             mailer.SendReportMail();
         }
 
