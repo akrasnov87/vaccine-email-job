@@ -63,7 +63,7 @@ namespace Vaccine
 
                             List<PentahoUrlBuilder> reports = new List<PentahoUrlBuilder>();
                             reports.Add(new PentahoUrlBuilder("total-orgs", "Сводный отчет", "f_user=" + users[i].id));
-                            reports.Add(new PentahoUrlBuilder("users", "Отчет", "f_user=" + users[i].id));
+                            reports.Add(new PentahoUrlBuilder("users", "Список сотрудников", "f_user=" + users[i].id));
                             reports.Add(new PentahoUrlBuilder("verify", "Отчет о достоверности сертификата", "f_user=" + users[i].id));
                             reports.Add(new PentahoUrlBuilder("main", "Процентное изменение показателей", "f_user=" + users[i], PentahoUrlBuilder.ReturnFormat.PDF));
 
