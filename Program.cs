@@ -8,11 +8,16 @@ namespace Vaccine
 {
     class Program
     {
+        private Mailer mailer;
         static void Main(string[] args)
         {
             Program prog = new Program();
             prog.Run();
-            
+
+            if (args.Length > 0 && args[0] == "true")
+            {
+                prog.SendReportMail();
+            }
         }
 
         /// <summary>
@@ -20,7 +25,7 @@ namespace Vaccine
         /// </summary>
         public void Run()
         {
-            Mailer mailer = new Mailer();
+            mailer = new Mailer();
             mailer.Log("processing: " + DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss"));
             using (ApplicationContext db = new ApplicationContext())
             {
@@ -35,10 +40,10 @@ namespace Vaccine
                             string[] emails = users[i].c_email.Trim().Replace(",", ";").Replace(" ", ";").Split(';');
 
                             List<PentahoUrlBuilder> reports = new List<PentahoUrlBuilder>();
-                            reports.Add(new PentahoUrlBuilder("total-orgs", "Сводный отчет", "f_user=" + users[i]));
-                            reports.Add(new PentahoUrlBuilder("verify", "Сводный отчет о достоверности сертификата", "f_user=" + users[i]));
-                            reports.Add(new PentahoUrlBuilder("total-orgs-types", "Сводный отчет по отраслям", "f_user=" + users[i]));
-                            reports.Add(new PentahoUrlBuilder("main", "Изменение показателей", "f_user=" + users[i], PentahoUrlBuilder.ReturnFormat.PDF));
+                            reports.Add(new PentahoUrlBuilder("total-orgs", "Сводный отчет", "f_user=" + users[i].id + "&d_date_end="));
+                            reports.Add(new PentahoUrlBuilder("verify", "Сводный отчет о достоверности сертификата", "f_user=" + users[i].id));
+                            reports.Add(new PentahoUrlBuilder("total-orgs-types", "Сводный отчет по отраслям", "f_user=" + users[i].id + "&d_date_end="));
+                            reports.Add(new PentahoUrlBuilder("main", "Изменение показателей", "f_user=" + users[i].id + "&d_date_start=&d_date_end=", PentahoUrlBuilder.ReturnFormat.PDF));
 
                             MailMessage mailMessage = mailer.GetMailMessage("Сводный отчет для Администратора", "Отчет за " + GetCurrentUserDate(), reports, emails, users[i].c_login);
                             mailer.SendMail(mailMessage);
@@ -57,10 +62,10 @@ namespace Vaccine
                             string[] emails = users[i].c_email.Trim().Replace(",", ";").Replace(" ", ";").Split(';');
 
                             List<PentahoUrlBuilder> reports = new List<PentahoUrlBuilder>();
-                            reports.Add(new PentahoUrlBuilder("total-orgs", "Сводный отчет", "f_user=" + users[i].id));
+                            reports.Add(new PentahoUrlBuilder("total-orgs", "Сводный отчет", "f_user=" + users[i].id + "&d_date_end="));
                             reports.Add(new PentahoUrlBuilder("users", "Список сотрудников", "f_user=" + users[i].id));
                             reports.Add(new PentahoUrlBuilder("verify", "Отчет о достоверности сертификата", "f_user=" + users[i].id));
-                            reports.Add(new PentahoUrlBuilder("main", "Изменение показателей", "f_user=" + users[i], PentahoUrlBuilder.ReturnFormat.PDF));
+                            reports.Add(new PentahoUrlBuilder("main", "Изменение показателей", "f_user=" + users[i] + "&d_date_start=&d_date_end=", PentahoUrlBuilder.ReturnFormat.PDF));
 
                             MailMessage mailMessage = mailer.GetMailMessage("Сводный отчет для Ответственного", "Отчет за " + GetCurrentUserDate(), reports, emails, users[i].c_login);
                             mailer.SendMail(mailMessage);
@@ -69,7 +74,10 @@ namespace Vaccine
                 }
             }
             mailer.Log("finished " + DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss"));
+        }
 
+        public void SendReportMail()
+        {
             mailer.SendReportMail();
         }
 

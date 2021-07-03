@@ -105,7 +105,7 @@ namespace Vaccine
                 smtp.UseDefaultCredentials = false;
                 smtp.Credentials = new NetworkCredential("mysmtp1987@gmail.com", "Bussine$Perfect");
                 smtp.EnableSsl = true;
-                smtp.Send(mail);
+                //smtp.Send(mail);
             } catch(Exception e)
             {
                 Log("[ERR:]" + e.ToString());
